@@ -111,14 +111,7 @@ export default function FelixHero() {
           <div
             ref={portraitRef}
             className="portrait-tilt-container"
-            style={{
-              position: 'relative',
-              width: '320px',
-              height: '420px',
-              perspective: '1000px',
-              transition: 'transform 0.45s var(--ease)',
-              ...tiltStyle
-            }}
+            style={tiltStyle}
           >
             {/* Elegant glowing background border */}
             <div style={{
