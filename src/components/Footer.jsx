@@ -265,9 +265,9 @@ export default function Footer() {
           <div className="footer-cols">
             <div className="footer-col">
               <h4 className="physics-node">Read</h4>
-              <a href="#story" className="physics-node">The Story</a>
-              <a href="#themes" className="physics-node">Core Themes</a>
-              <a href="#purchase" className="physics-node">Buy the Book</a>
+              <a href="#/book" className="physics-node">The Book</a>
+              <a href="#/book#themes" className="physics-node">Core Themes</a>
+              <a href="#/book#purchase" className="physics-node">Buy the Book</a>
             </div>
             <div className="footer-col">
               <h4 className="physics-node">Dr. Felix</h4>

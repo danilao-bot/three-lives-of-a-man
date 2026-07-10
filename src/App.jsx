@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import OpeningQuote from './components/OpeningQuote';
-import ThreeLives from './components/ThreeLives';
-import AboutTheStory from './components/AboutTheStory';
-import WhyThisMatters from './components/WhyThisMatters';
-import CoreThemes from './components/CoreThemes';
-import AuthorsNote from './components/AuthorsNote';
-import AboutTheAuthor from './components/AboutTheAuthor';
-import BookDetails from './components/BookDetails';
-import Countdown from './components/Countdown';
-import Purchase from './components/Purchase';
-import FinalReflection from './components/FinalReflection';
 import Footer from './components/Footer';
 
+// New Portfolio Home Components
+import FelixHero from './components/FelixHero';
+import FelixIntro from './components/FelixIntro';
+import FelixWhoIAm from './components/FelixWhoIAm';
+import FelixExpertise from './components/FelixExpertise';
+import FelixPhilosophy from './components/FelixPhilosophy';
+import FelixContact from './components/FelixContact';
+
 // Subpages
+import Book from './components/Book';
 import Fiction from './components/Fiction';
 import Opinion from './components/Opinion';
 import Research from './components/Research';
@@ -29,6 +26,21 @@ export default function App() {
     // Parse the hash on load
     const handleHashChange = () => {
       const hash = window.location.hash;
+      
+      // If we are navigating to an anchor section on the home page (e.g. #contact)
+      if (hash.startsWith('#') && !hash.startsWith('#/')) {
+        setCurrentPage('home');
+        document.body.classList.add('page-revealed');
+        setSplashActive(false);
+        // Let browser handle scroll or do it manually
+        const targetId = hash.substring(1);
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+        return;
+      }
+
       if (hash.startsWith('#/fiction')) {
         setCurrentPage('fiction');
         document.body.classList.add('page-revealed');
@@ -45,16 +57,23 @@ export default function App() {
         setCurrentPage('affiliations');
         document.body.classList.add('page-revealed');
         window.scrollTo(0, 0);
-      } else {
-        setCurrentPage('home');
-        // If not running splash, reveal the home page
-        const hasVisited = sessionStorage.getItem('tlm_visited');
+      } else if (hash.startsWith('#/book') || hash.startsWith('#/story')) {
+        setCurrentPage('book');
+        const hasVisitedBook = sessionStorage.getItem('book_splash_visited');
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (hasVisited || reducedMotion) {
+        
+        if (hasVisitedBook || reducedMotion) {
           document.body.classList.add('page-revealed');
+          setSplashActive(false);
         } else {
+          document.body.classList.remove('page-revealed'); // Hide page until splash is done
           setSplashActive(true);
         }
+        window.scrollTo(0, 0);
+      } else {
+        setCurrentPage('home');
+        document.body.classList.add('page-revealed');
+        setSplashActive(false);
       }
     };
 
@@ -65,6 +84,7 @@ export default function App() {
 
   const handleSplashComplete = () => {
     setSplashActive(false);
+    sessionStorage.setItem('book_splash_visited', 'true');
     document.body.classList.add('page-revealed');
   };
 
@@ -78,45 +98,18 @@ export default function App() {
         return <Research />;
       case 'affiliations':
         return <Affiliations />;
+      case 'book':
+        return <Book />;
       case 'home':
       default:
         return (
           <>
-            {/* 1. Hero Section */}
-            <Hero />
-
-            {/* 2. Opening Quote Section (Signature Device #1) */}
-            <OpeningQuote />
-
-            {/* 3. The Three Lives Cards Centerpiece */}
-            <ThreeLives />
-
-            {/* 4. About The Story Section */}
-            <AboutTheStory />
-
-            {/* 5. Why This Story Matters Section */}
-            <WhyThisMatters />
-
-            {/* 6. Core Themes Section */}
-            <CoreThemes />
-
-            {/* 7. Author's Note Section */}
-            <AuthorsNote />
-
-            {/* 8. About The Author Section */}
-            <AboutTheAuthor />
-
-            {/* 9. Book Details Section (Frosted Glass Card) */}
-            <BookDetails />
-
-            {/* 10. Release Countdown Section */}
-            <Countdown />
-
-            {/* 11. Purchase Section (Liquid Glass Card) */}
-            <Purchase />
-
-            {/* 12. Final Reflection Section (Signature Device #2) */}
-            <FinalReflection />
+            <FelixHero />
+            <FelixIntro />
+            <FelixWhoIAm />
+            <FelixExpertise />
+            <FelixPhilosophy />
+            <FelixContact />
           </>
         );
     }
@@ -124,8 +117,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-paper text-soft-ink antialiased overflow-x-hidden selection:bg-dawn-gold/30 selection:text-soft-ink">
-      {/* Splash Intro Preloader */}
-      {currentPage === 'home' && splashActive && (
+      {/* Splash Intro Preloader (only on Book subpage first load) */}
+      {currentPage === 'book' && splashActive && (
         <SplashIntro onComplete={handleSplashComplete} />
       )}
 

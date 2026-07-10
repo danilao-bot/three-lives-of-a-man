@@ -358,7 +358,8 @@ p { margin: 0; }
 .hero-grid {
   position: relative; z-index: 1; width: 100%;
   display: grid; grid-template-columns: 1.2fr .8fr; gap: 80px; align-items: center;
-  padding-top: 100px;
+  padding-top: 120px;
+  padding-bottom: 140px;
 }
 .hero-copy h1 {
   font-size: clamp(46px, 7.4vw, 104px); line-height: 0.96; color: var(--ink); margin-top: 28px;
@@ -376,7 +377,11 @@ p { margin: 0; }
 }
 .hero-copy .sub { font-family: var(--f-mono); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--wine-deep); margin-top: 22px; }
 .hero-copy .thesis { font-family: var(--f-display); font-style: italic; font-size: clamp(19px,2.1vw,24px); color: var(--text-soft); margin-top: 34px; max-width: 500px; line-height: 1.52; }
-.hero-cta { display: flex; gap: 16px; margin-top: 48px; flex-wrap: wrap; }
+.hero-cta { margin-top: 48px; }
+.hero-cta-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.hero-cta-secondary { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
+.btn-more-toggle { display: none; }
+
 
 .hero-scroll {
   position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%);
@@ -463,8 +468,13 @@ p { margin: 0; }
     line-height: 1.5;
   }
   .hero-cta {
-    justify-content: center;
     margin-top: 32px;
+  }
+  .hero-cta-row {
+    justify-content: center;
+  }
+  .hero-cta-secondary {
+    justify-content: center;
   }
   .book-cover {
     transform: none !important;
@@ -483,15 +493,67 @@ p { margin: 0; }
     gap: 32px;
   }
   .hero-cta {
-    flex-direction: column;
-    width: 100%;
-    gap: 12px;
     margin-top: 28px;
-  }
-  .hero-cta .btn {
     width: 100%;
+  }
+
+  /* Primary row: primary button + toggle side by side */
+  .hero-cta-row {
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+  .hero-cta-row .btn-primary {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* Show the More toggle only on mobile */
+  .btn-more-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    height: 48px;
+    border-radius: var(--r-pill);
+    border: 1.5px solid var(--line);
+    background: transparent;
+    font-family: var(--f-body);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: border-color 0.25s, color 0.25s;
+  }
+  .btn-more-toggle:hover {
+    border-color: var(--wine);
+    color: var(--wine);
+  }
+
+  /* Secondary CTAs: collapsed by default, expand on toggle */
+  .hero-cta-secondary {
+    overflow: hidden;
+    max-height: 0;
+    margin-top: 0;
+    opacity: 0;
+    flex-direction: column;
+    gap: 10px;
+    transition: max-height 0.38s ease, opacity 0.3s ease, margin-top 0.28s ease;
+  }
+  .hero-cta-secondary.is-open {
+    max-height: 160px;
+    opacity: 1;
+    margin-top: 12px;
+  }
+  .hero-cta-secondary .btn {
+    width: 100%;
+    text-align: center;
   }
 }
+
 
 /* ---------- Opening quote ---------- */
 .quote { padding: 160px 0; position: relative; }
@@ -1085,3 +1147,64 @@ body.page-revealed .footer {
 
 /* Fix: hero section must be visible once page-revealed */
 body.page-revealed .hero { opacity: 1; filter: blur(0); transform: scale(1); }
+
+/* =========================================================
+   Dr. Felix Portfolio Additions
+   ========================================================= */
+.role-card-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -12px rgba(16,42,67,.12) !important;
+  border-color: var(--wine) !important;
+}
+.role-card-item:hover .role-icon-wrapper {
+  background: var(--wine) !important;
+  color: var(--on-ink) !important;
+}
+
+.portrait-tilt-container:hover .portrait-image {
+  transform: scale(1.04);
+}
+
+.expertise-link-hover:hover {
+  gap: 10px !important;
+}
+
+.form-input:focus {
+  border-color: var(--wine) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 4px rgba(122,35,49,.08);
+}
+
+/* =========================================================
+   Contact Section – Responsive Grid
+   ========================================================= */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+}
+@media (min-width: 768px) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 48px;
+  }
+}
+@media (min-width: 1024px) {
+  .contact-grid {
+    gap: 64px;
+  }
+}
+
+/* Tighten card & form padding on small screens */
+@media (max-width: 480px) {
+  .contact-grid .card {
+    padding: 20px !important;
+  }
+  .contact-grid form.card {
+    padding: 24px 20px !important;
+  }
+  .contact-grid .card[style*="gap: 20px"] {
+    gap: 14px !important;
+  }
+}

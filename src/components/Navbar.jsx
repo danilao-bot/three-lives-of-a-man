@@ -19,11 +19,14 @@ export default function Navbar({ currentPage }) {
 
   const handleLinkClick = (e, path) => {
     setIsOpen(false);
-    // If navigating to home story anchor, we handle it if already on home page
-    if (path === '#story' && currentPage === 'home') {
-      e.preventDefault();
-      const el = document.getElementById('story');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    // Handle anchor links for sections on home page
+    if (path.startsWith('#') && !path.startsWith('#/')) {
+      const targetId = path.substring(1);
+      if (currentPage === 'home') {
+        e.preventDefault();
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -34,16 +37,16 @@ export default function Navbar({ currentPage }) {
   return (
     <nav className={`nav ${isScrolled ? 'is-scrolled' : ''} ${isOpen ? 'is-open' : ''}`}>
       <a href="#/" onClick={(e) => handleLinkClick(e, '#/')} className="nav-brand">
-        <span className="mark"></span>Three Lives of a Man
+        <span className="mark"></span>Dr. Felix
       </a>
 
       <div className="nav-links">
         <a
-          href="#story"
-          onClick={(e) => handleLinkClick(e, '#story')}
-          className={getLinkClass('home')}
+          href="#/book"
+          onClick={(e) => handleLinkClick(e, '#/book')}
+          className={getLinkClass('book')}
         >
-          The Story
+          The Book
         </a>
         <a
           href="#/research"
@@ -77,18 +80,21 @@ export default function Navbar({ currentPage }) {
 
       <div className="nav-actions">
         <a
-          href="#/purchase"
+          href="#contact"
           onClick={(e) => {
             setIsOpen(false);
             if (currentPage === 'home') {
               e.preventDefault();
-              const el = document.getElementById('purchase');
+              const el = document.getElementById('contact');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              // Redirect to homepage with contact anchor
+              window.location.hash = '#contact';
             }
           }}
           className="btn btn-primary btn-sm"
         >
-          Buy the Book
+          Contact Me
         </a>
         <button
           className="nav-burger"
@@ -103,3 +109,4 @@ export default function Navbar({ currentPage }) {
     </nav>
   );
 }
+

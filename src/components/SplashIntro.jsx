@@ -21,7 +21,7 @@ export default function SplashIntro({ onComplete }) {
 
   useEffect(() => {
     // Check if visited or reduced motion
-    const hasVisited = sessionStorage.getItem('tlm_visited');
+    const hasVisited = sessionStorage.getItem('book_splash_visited');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (hasVisited || reducedMotion) {
@@ -74,7 +74,7 @@ export default function SplashIntro({ onComplete }) {
     };
 
     const finishSplash = () => {
-      sessionStorage.setItem('tlm_visited', 'true');
+      sessionStorage.setItem('book_splash_visited', 'true');
       setFadedOut(true);
       document.body.classList.remove('splash-active');
       // Delay callbacks to allow layout transitions
