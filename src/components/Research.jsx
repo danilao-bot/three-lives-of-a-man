@@ -1,39 +1,14 @@
-import { useEffect } from 'react';
-
-const researchPapers = [
-  {
-    tag: 'Education',
-    title: 'Rethinking Assessment: A Framework for Competency-Based Learning in Higher Education',
-    citation: 'Journal of Educational Research & Practice · 2023'
-  },
-  {
-    tag: 'Pedagogy',
-    title: 'Narrative as Pedagogy: Using Storytelling to Improve Retention in STEM Classrooms',
-    citation: 'International Journal of Teaching & Learning · 2022'
-  },
-  {
-    tag: 'Entrepreneurship',
-    title: 'Entrepreneurial Identity Formation Among First-Generation Founders',
-    citation: 'Journal of Innovation & Enterprise · 2021'
-  },
-  {
-    tag: 'Technology',
-    title: 'Digital Literacy and the Future of Work in Sub-Saharan Africa',
-    citation: 'African Journal of Technology Studies · 2024'
-  },
-  {
-    tag: 'Writing',
-    title: 'The Researcher as Storyteller: Bridging Academic Writing and Public Understanding',
-    citation: 'Education & Society Symposium, Conference Proceedings · 2020'
-  },
-  {
-    tag: 'Curriculum',
-    title: 'Building Resilient Curricula: Lessons From a Decade of Classroom Research',
-    citation: 'Journal of Curriculum Studies · 2019'
-  }
-];
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function Research() {
+  const [researchPapers, setResearchPapers] = useState(() => getStoredData('researchPapers'));
+
+  useEffect(() => {
+    const handleUpdate = () => setResearchPapers(getStoredData('researchPapers'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
   useEffect(() => {
     // Reveal animation
     const targets = document.querySelectorAll('.reveal');
@@ -76,7 +51,13 @@ export default function Research() {
                     <p>{paper.citation}</p>
                   </div>
                 </div>
-                <a href="#" className="btn btn-ghost btn-sm" onClick={(e) => e.preventDefault()}>
+                <a 
+                  href={paper.link || '#'} 
+                  className="btn btn-ghost btn-sm" 
+                  target={paper.link && paper.link !== '#' ? '_blank' : undefined} 
+                  rel="noopener noreferrer"
+                  onClick={(!paper.link || paper.link === '#') ? (e) => e.preventDefault() : undefined}
+                >
                   Read Paper →
                 </a>
               </div>

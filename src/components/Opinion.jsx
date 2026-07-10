@@ -1,51 +1,14 @@
-import { useEffect } from 'react';
-
-const opinionArticles = [
-  {
-    tag: 'Identity',
-    title: 'On Becoming: Why Identity Is Never a Fixed Address',
-    excerpt: "We talk about identity like it's a place you arrive at once and stay. It isn't. It's closer to a house you keep renovating, sometimes against your will.",
-    metaDate: 'June 2026',
-    metaRead: '4 min read'
-  },
-  {
-    tag: 'Ambition',
-    title: 'The Quiet Cost of Ambition',
-    excerpt: 'Nobody warns you that the things you build to feel secure are often the same things that quietly cost you the people you built them for.',
-    metaDate: 'May 2026',
-    metaRead: '5 min read'
-  },
-  {
-    tag: 'Inheritance',
-    title: 'What We Owe the Stories We Inherit',
-    excerpt: 'Every family hands down more than furniture and surnames. It hands down a script. The work of growing up is deciding which lines to keep.',
-    metaDate: 'April 2026',
-    metaRead: '6 min read'
-  },
-  {
-    tag: 'Grief',
-    title: "Grief Doesn't End — It Changes Shape",
-    excerpt: "People keep waiting for grief to leave. It doesn't leave. It just stops standing in the doorway and starts sitting quietly in the corner.",
-    metaDate: 'March 2026',
-    metaRead: '4 min read'
-  },
-  {
-    tag: 'Building',
-    title: 'Why Every Founder Should Read More Fiction',
-    excerpt: 'Spreadsheets tell you what happened. Fiction tells you why people do what they do. You need both to build anything that lasts.',
-    metaDate: 'Feb 2026',
-    metaRead: '3 min read'
-  },
-  {
-    tag: 'Self',
-    title: 'The Myth of "Having It All Figured Out"',
-    excerpt: 'The most put-together people I know are the ones who stopped performing certainty. Confidence and clarity are not the same thing.',
-    metaDate: 'Jan 2026',
-    metaRead: '5 min read'
-  }
-];
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function Opinion() {
+  const [opinionArticles, setOpinionArticles] = useState(() => getStoredData('opinionArticles'));
+
+  useEffect(() => {
+    const handleUpdate = () => setOpinionArticles(getStoredData('opinionArticles'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
   useEffect(() => {
     // Reveal animation
     const targets = document.querySelectorAll('.reveal');
@@ -89,7 +52,13 @@ export default function Opinion() {
                   <span className="dot-sep"></span>
                   <span>{art.metaRead}</span>
                 </div>
-                <a href="#" className="read" onClick={(e) => e.preventDefault()}>
+                <a 
+                  href={art.link || '#'} 
+                  className="read" 
+                  target={art.link && art.link !== '#' ? '_blank' : undefined} 
+                  rel="noopener noreferrer"
+                  onClick={(!art.link || art.link === '#') ? (e) => e.preventDefault() : undefined}
+                >
                   Read more →
                 </a>
               </article>

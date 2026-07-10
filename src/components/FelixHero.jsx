@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function FelixHero() {
   const heroRef = useRef(null);
   const portraitRef = useRef(null);
   const [tiltStyle, setTiltStyle] = useState({});
   const [showMoreCTAs, setShowMoreCTAs] = useState(false);
+  const [bio, setBio] = useState(() => getStoredData('biography'));
+
+  useEffect(() => {
+    const handleUpdate = () => setBio(getStoredData('biography'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -78,7 +86,7 @@ export default function FelixHero() {
             Inspiring Innovation.
           </h1>
           <p className="thesis hero-fade-in" style={{ animationDelay: '0.4s', maxWidth: '520px' }}>
-            Shaping the future of AI, education, and technology across Africa.
+            {bio.heroTagline}
           </p>
 
           <div className="hero-cta hero-fade-in" style={{ animationDelay: '0.55s' }}>

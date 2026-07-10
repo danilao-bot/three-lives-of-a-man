@@ -1,57 +1,14 @@
-import { useEffect } from 'react';
-
-const fictionArticles = [
-  {
-    tag: 'Short Story',
-    title: 'The Last Letter',
-    excerpt: "He found the letter folded into the family Bible, addressed to a son who never learned to read his father's handwriting until it was too late to ask what it meant.",
-    metaWords: '2,400 words',
-    metaType: 'Excerpt',
-    linkText: 'Read excerpt →'
-  },
-  {
-    tag: 'Short Story',
-    title: 'Salt and Memory',
-    excerpt: 'Every July, the smell of the harbor brought her father back for exactly as long as it took the wind to change. This is the story of the years she waited for it.',
-    metaWords: '1,800 words',
-    metaType: 'Excerpt',
-    linkText: 'Read excerpt →'
-  },
-  {
-    tag: 'Flash Fiction',
-    title: 'What the River Kept',
-    excerpt: 'Two brothers, one inheritance, and a river that remembered everything they tried to forget on its banks one summer.',
-    metaWords: '950 words',
-    metaType: 'Complete',
-    linkText: 'Read story →'
-  },
-  {
-    tag: 'Short Story',
-    title: 'Three Doors',
-    excerpt: 'A man is given three doors and one rule: he may only choose the life behind one. He spends thirty years trying to open all of them at once.',
-    metaWords: '3,100 words',
-    metaType: 'Excerpt',
-    linkText: 'Read excerpt →'
-  },
-  {
-    tag: 'Short Story',
-    title: 'The Weight of Names',
-    excerpt: 'She was named after a grandmother she never met, and spent her whole life wondering which parts of herself were actually hers.',
-    metaWords: '2,000 words',
-    metaType: 'Excerpt',
-    linkText: 'Read excerpt →'
-  },
-  {
-    tag: 'Flash Fiction',
-    title: 'Inheritance',
-    excerpt: 'All he left behind fit into a single box. It took her a decade to understand that the box was never the point.',
-    metaWords: '700 words',
-    metaType: 'Complete',
-    linkText: 'Read story →'
-  }
-];
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function Fiction() {
+  const [fictionArticles, setFictionArticles] = useState(() => getStoredData('fictionArticles'));
+
+  useEffect(() => {
+    const handleUpdate = () => setFictionArticles(getStoredData('fictionArticles'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
   useEffect(() => {
     // Reveal animation
     const targets = document.querySelectorAll('.reveal');

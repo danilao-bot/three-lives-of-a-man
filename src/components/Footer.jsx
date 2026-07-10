@@ -121,8 +121,12 @@ export default function Footer() {
           const dist = Math.sqrt(mx * mx + my * my);
           if (dist < mouse.radius && dist > 1) {
             const force = (mouse.radius - dist) / mouse.radius;
-            fx -= (mx / dist) * force * mouseRepel;
-            fy -= (my / dist) * force * mouseRepel;
+            // Only apply displacement force if element is not a link or social-icon
+            const isClickable = n.element.tagName === 'A' || n.element.classList.contains('social-icon');
+            if (!isClickable) {
+              fx -= (mx / dist) * force * mouseRepel;
+              fy -= (my / dist) * force * mouseRepel;
+            }
             n.hovered = true;
           }
         }

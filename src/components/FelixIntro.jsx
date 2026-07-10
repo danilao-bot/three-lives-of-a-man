@@ -1,6 +1,15 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function FelixIntro() {
+  const [bio, setBio] = useState(() => getStoredData('biography'));
+
+  useEffect(() => {
+    const handleUpdate = () => setBio(getStoredData('biography'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
+
   useEffect(() => {
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
@@ -35,7 +44,7 @@ export default function FelixIntro() {
               color: 'var(--on-ink)'
             }}
           >
-            "I believe technology should do more than automate processes—it should solve meaningful problems, inspire innovation, and improve lives."
+            "{bio.introQuote}"
           </h2>
           
           <div 
@@ -50,12 +59,11 @@ export default function FelixIntro() {
               gap: '24px'
             }}
           >
-            <p style={{ color: 'var(--on-ink-soft)' }}>
-              As an Artificial Intelligence researcher, university lecturer, author, and technology entrepreneur, my work bridges academic excellence with practical innovation. Through research, teaching, writing, and product development, I strive to make emerging technologies more accessible, trustworthy, and impactful for individuals, organizations, and society.
-            </p>
-            <p style={{ color: 'var(--on-ink-soft)' }}>
-              Whether I'm publishing research, authoring books, mentoring future innovators, speaking at conferences, or building AI-driven solutions, my mission remains constant:
-            </p>
+            {bio.introParagraphs.map((para, i) => (
+              <p key={i} style={{ color: 'var(--on-ink-soft)' }}>
+                {para}
+              </p>
+            ))}
             <p style={{ 
               fontFamily: 'var(--f-display)', 
               fontSize: 'clamp(20px, 2.5vw, 24px)', 
@@ -65,7 +73,7 @@ export default function FelixIntro() {
               paddingLeft: '20px',
               margin: '12px 0'
             }}>
-              To create knowledge that empowers people and technology that transforms lives.
+              {bio.introHighlights}
             </p>
           </div>
         </div>
