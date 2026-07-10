@@ -80,7 +80,7 @@ export default function FelixHero() {
           <span className="eyebrow hero-fade-in" style={{ animationDelay: '0.1s' }}>
             Researcher · Educator · Entrepreneur
           </span>
-          <h1 className="hero-fade-in" style={{ animationDelay: '0.25s', fontSize: 'clamp(30px, 3.5vw, 48px)', lineHeight: 1.18 }}>
+          <h1 className="hero-fade-in" style={{ animationDelay: '0.25s' }}>
             Building Intelligent Systems.<br />
             Advancing Knowledge.<br />
             Inspiring Innovation.

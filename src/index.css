@@ -359,7 +359,7 @@ p { margin: 0; }
 
 /* ---------- Hero ---------- */
 .hero {
-  min-height: 100vh; display: flex; align-items: center; position: relative;
+  min-height: 100svh; display: flex; align-items: center; position: relative;
   background: var(--paper); overflow: hidden;
 }
 .hero .liquid .blob { background: var(--wine); }
@@ -369,14 +369,15 @@ p { margin: 0; }
 
 .hero-grid {
   position: relative; z-index: 1; width: 100%;
-  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: center;
-  padding-top: 90px;
-  padding-bottom: 100px;
+  display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr); gap: clamp(44px, 6vw, 96px); align-items: center;
+  padding-top: clamp(110px, 16vh, 170px);
+  padding-bottom: clamp(92px, 13vh, 150px);
 }
 
 .portrait-tilt-container {
   position: relative;
-  height: clamp(300px, 52vh, 460px);
+  width: min(100%, clamp(360px, 30vw, 500px));
+  height: auto;
   aspect-ratio: 3.4/4.5;
   perspective: 1000px;
   transition: transform 0.45s var(--ease);
@@ -385,19 +386,27 @@ p { margin: 0; }
 
 /* Standard/Large laptop (1366px - 1280px) */
 @media (max-width: 1366px) {
-  .hero-grid { gap: 48px; padding-top: 80px; padding-bottom: 90px; }
+  .hero-grid { gap: 48px; padding-top: 112px; padding-bottom: 118px; }
+  .portrait-tilt-container { width: min(100%, clamp(350px, 28vw, 440px)); }
 }
 
 /* Small laptop / large tablet (1100px) */
 @media (max-width: 1100px) {
-  .hero-grid { gap: 30px; padding-top: 60px; padding-bottom: 70px; }
-  .hero-copy h1 { font-size: clamp(26px, 3vw, 40px); }
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(310px, .82fr);
+    gap: 34px;
+    padding-top: 104px;
+    padding-bottom: 112px;
+  }
+  .hero-copy h1 { font-size: clamp(42px, 5vw, 58px); }
   .hero-cta { max-width: 380px; }
+  .portrait-tilt-container { width: min(100%, clamp(300px, 31vw, 380px)); }
 }
 
 .hero-copy h1 {
-  font-size: clamp(40px, 5vw, 68px); line-height: 1.05; color: var(--ink); margin-top: 24px;
-  letter-spacing: -.015em;
+  font-size: clamp(48px, 5.35vw, 78px); line-height: .98; color: var(--ink); margin-top: 24px;
+  letter-spacing: 0;
+  max-width: 880px;
 }
 .hero-dot {
   color: var(--gold);
@@ -410,7 +419,7 @@ p { margin: 0; }
   transform: scale(1.2) rotate(10deg);
 }
 .hero-copy .sub { font-family: var(--f-mono); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--wine-deep); margin-top: 22px; }
-.hero-copy .thesis { font-family: var(--f-display); font-style: italic; font-size: clamp(17px, 2vw, 21px); color: var(--text-soft); margin-top: 24px; max-width: 500px; line-height: 1.5; }
+.hero-copy .thesis { font-family: var(--f-display); font-style: italic; font-size: clamp(18px, 1.45vw, 22px); color: var(--text-soft); margin-top: 24px; max-width: 620px; line-height: 1.5; }
 .hero-cta { margin-top: 36px; display: flex; flex-direction: column; gap: 12px; max-width: 420px; }
 .hero-cta-row { display: flex; gap: 12px; align-items: center; flex-wrap: nowrap; }
 .hero-cta-row .btn-primary { flex: 1; text-align: center; }
@@ -440,46 +449,46 @@ p { margin: 0; }
 /* Height-based landscape adjustments (lecture laptops, projectors) */
 @media (min-width: 981px) and (max-height: 820px) {
   .hero-grid {
-    padding-top: 50px;
-    padding-bottom: 60px;
-    gap: 36px;
+    padding-top: 104px;
+    padding-bottom: 96px;
+    gap: 44px;
   }
   .portrait-tilt-container {
-    height: clamp(260px, 44vh, 380px);
+    width: min(100%, clamp(340px, 28vw, 430px));
   }
   .hero-copy h1 {
-    font-size: clamp(26px, 3vw, 40px);
-    margin-top: 14px;
+    font-size: clamp(44px, 4.4vw, 62px);
+    margin-top: 18px;
   }
   .hero-copy .thesis {
-    margin-top: 14px;
-    font-size: 16px;
+    margin-top: 16px;
+    font-size: clamp(16px, 1.35vw, 19px);
   }
   .hero-cta {
-    margin-top: 20px;
+    margin-top: 26px;
   }
 }
 
 @media (min-width: 981px) and (max-height: 700px) {
   .hero-grid {
-    padding-top: 36px;
-    padding-bottom: 44px;
-    gap: 24px;
+    padding-top: 92px;
+    padding-bottom: 78px;
+    gap: 34px;
   }
   .portrait-tilt-container {
-    height: clamp(220px, 38vh, 300px);
+    width: min(100%, clamp(300px, 26vw, 360px));
   }
   .hero-copy h1 {
-    font-size: clamp(22px, 2.6vw, 34px);
-    margin-top: 10px;
+    font-size: clamp(38px, 4vw, 52px);
+    margin-top: 14px;
   }
   .hero-copy .thesis {
-    margin-top: 10px;
-    font-size: 14px;
-    line-height: 1.4;
+    margin-top: 12px;
+    font-size: 16px;
+    line-height: 1.45;
   }
   .hero-cta {
-    margin-top: 14px;
+    margin-top: 20px;
   }
 }
 
@@ -542,10 +551,10 @@ p { margin: 0; }
   .hero-grid {
     display: flex;
     flex-direction: column;
-    padding-top: 100px;
-    padding-bottom: 120px;
+    padding-top: 112px;
+    padding-bottom: 124px;
     text-align: center;
-    gap: 40px;
+    gap: 42px;
   }
   .book-stage {
     order: 1;
@@ -558,8 +567,8 @@ p { margin: 0; }
     width: 100%;
   }
   .hero-copy h1 {
-    font-size: clamp(38px, 7.5vw, 68px);
-    line-height: 1.0;
+    font-size: clamp(42px, 8.2vw, 68px);
+    line-height: 1.02;
     margin-top: 20px;
   }
   .hero-copy .thesis {
@@ -579,6 +588,9 @@ p { margin: 0; }
   .hero-cta-secondary {
     justify-content: center;
   }
+  .portrait-tilt-container {
+    width: min(74vw, 390px);
+  }
   .book-cover {
     transform: none !important;
     width: clamp(180px, 30vw, 220px);
@@ -592,8 +604,21 @@ p { margin: 0; }
 
 @media (max-width: 560px) {
   .hero-grid {
-    padding-top: 80px;
-    gap: 32px;
+    padding-top: 96px;
+    padding-bottom: 112px;
+    gap: 30px;
+  }
+  .hero-copy h1 {
+    font-size: clamp(36px, 11vw, 48px);
+    line-height: 1.04;
+  }
+  .hero-copy .sub,
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: .12em;
+  }
+  .portrait-tilt-container {
+    width: min(82vw, 330px);
   }
   .hero-cta {
     margin-top: 28px;
