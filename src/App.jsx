@@ -18,6 +18,7 @@ import Opinion from './components/Opinion';
 import Research from './components/Research';
 import Affiliations from './components/Affiliations';
 import SplashIntro from './components/SplashIntro';
+import Admin from './components/Admin';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -54,6 +55,7 @@ export default function App() {
       else if (hash.startsWith('#/opinion'))   navigateTo('opinion');
       else if (hash.startsWith('#/research'))  navigateTo('research');
       else if (hash.startsWith('#/affiliations')) navigateTo('affiliations');
+      else if (hash.startsWith('#/admin')) navigateTo('admin');
       else if (hash.startsWith('#/book') || hash.startsWith('#/story')) {
         navigateTo('book', () => {
           const hasVisited = sessionStorage.getItem('book_splash_visited');
@@ -89,6 +91,8 @@ export default function App() {
         return <Affiliations />;
       case 'book':
         return <Book />;
+      case 'admin':
+        return <Admin />;
       case 'home':
       default:
         return (
@@ -120,7 +124,7 @@ export default function App() {
       )}
 
       {/* Sticky Navigation Bar */}
-      <Navbar currentPage={currentPage} />
+      {currentPage !== 'admin' && <Navbar currentPage={currentPage} />}
 
       {/* Main Content Sections */}
       <main>
@@ -128,7 +132,7 @@ export default function App() {
       </main>
 
       {/* Footer Section */}
-      <Footer currentPage={currentPage} />
+      {currentPage !== 'admin' && <Footer currentPage={currentPage} />}
     </div>
   );
 }

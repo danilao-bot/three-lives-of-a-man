@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
-function getTimeRemaining() {
-  const target = new Date('2026-08-01T00:00:00');
+function getTimeRemaining(targetDate) {
+  const target = new Date(targetDate);
   const now = new Date();
   const total = target - now;
 
@@ -23,12 +24,19 @@ function pad(n) {
 }
 
 export default function Countdown() {
-  const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
+  const [settings, setSettings] = useState(() => getStoredData('bookSettings'));
+  const [timeLeft, setTimeLeft] = useState(() => getTimeRemaining(settings.countdownTarget));
 
   useEffect(() => {
-    // Update countdown every second
+    const handleUpdate = () => {
+      const nextSettings = getStoredData('bookSettings');
+      setSettings(nextSettings);
+      setTimeLeft(getTimeRemaining(nextSettings.countdownTarget));
+    };
+    window.addEventListener('db-update', handleUpdate);
+
     const timer = setInterval(() => {
-      setTimeLeft(getTimeRemaining());
+      setTimeLeft(getTimeRemaining(settings.countdownTarget));
     }, 1000);
 
     // Reveal animation
@@ -43,12 +51,19 @@ export default function Countdown() {
         });
       }, { threshold: 0.18 });
       targets.forEach(t => obs.observe(t));
-      return () => { clearInterval(timer); obs.disconnect(); };
+      return () => {
+        window.removeEventListener('db-update', handleUpdate);
+        clearInterval(timer);
+        obs.disconnect();
+      };
     }
 
     targets.forEach(t => t.classList.add('is-visible'));
-    return () => clearInterval(timer);
-  }, []);
+    return () => {
+      window.removeEventListener('db-update', handleUpdate);
+      clearInterval(timer);
+    };
+  }, [settings.countdownTarget]);
 
   const isExpired = timeLeft.total <= 0;
 
@@ -62,7 +77,7 @@ export default function Countdown() {
         <h2 className="reveal" style={{ color: 'var(--on-ink)', marginTop: '16px', fontSize: 'clamp(28px,3.6vw,44px)' }}>
           The third life begins July 1.
         </h2>
-        <div className="countdown-card glass reveal" data-countdown="2026-08-01T00:00:00">
+        <div className="countdown-card glass reveal" data-countdown={settings.countdownTarget}>
           {isExpired ? (
             <div className="cd-grid">
               <div className="cd-unit">

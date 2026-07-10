@@ -1,12 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function Purchase() {
+  const [settings, setSettings] = useState(() => getStoredData('bookSettings'));
+
   useEffect(() => {
+    const handleUpdate = () => setSettings(getStoredData('bookSettings'));
+    window.addEventListener('db-update', handleUpdate);
+
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
       targets.forEach(t => t.classList.add('is-visible'));
-      return;
+      return () => window.removeEventListener('db-update', handleUpdate);
     }
+
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -16,7 +23,11 @@ export default function Purchase() {
       });
     }, { threshold: 0.18 });
     targets.forEach(t => obs.observe(t));
-    return () => obs.disconnect();
+
+    return () => {
+      window.removeEventListener('db-update', handleUpdate);
+      obs.disconnect();
+    };
   }, []);
 
   return (
@@ -24,13 +35,13 @@ export default function Purchase() {
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="purchase-card glass-light reveal">
           <span className="edition">Digital Edition</span>
-          <div className="price">₦5,000</div>
+          <div className="price">{settings.digitalPrice}</div>
           <ul className="purchase-list">
             <li>Instant download</li>
-            <li>Read anywhere — phone, tablet, e-reader</li>
+            <li>Read anywhere - phone, tablet, e-reader</li>
             <li>Launch edition pricing</li>
           </ul>
-          <a href="#" className="btn btn-primary">Get Your Copy</a>
+          <a href={settings.purchaseLink} className="btn btn-primary">Get Your Copy</a>
         </div>
       </div>
     </section>

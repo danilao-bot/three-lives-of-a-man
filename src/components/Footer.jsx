@@ -11,8 +11,8 @@ export default function Footer() {
 
     const ctx = canvas.getContext('2d');
 
-    // Select all .physics-node elements inside footer
-    const nodeElements = footer.querySelectorAll('.physics-node');
+    // Keep interactive footer links static so they remain easy to click.
+    const nodeElements = footer.querySelectorAll('.physics-node:not(a):not(.social-icon)');
     if (nodeElements.length === 0) return;
 
     let width = canvas.width = footer.offsetWidth;
@@ -121,12 +121,8 @@ export default function Footer() {
           const dist = Math.sqrt(mx * mx + my * my);
           if (dist < mouse.radius && dist > 1) {
             const force = (mouse.radius - dist) / mouse.radius;
-            // Only apply displacement force if element is not a link or social-icon
-            const isClickable = n.element.tagName === 'A' || n.element.classList.contains('social-icon');
-            if (!isClickable) {
-              fx -= (mx / dist) * force * mouseRepel;
-              fy -= (my / dist) * force * mouseRepel;
-            }
+            fx -= (mx / dist) * force * mouseRepel;
+            fy -= (my / dist) * force * mouseRepel;
             n.hovered = true;
           }
         }

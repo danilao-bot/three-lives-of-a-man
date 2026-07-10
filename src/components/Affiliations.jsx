@@ -1,51 +1,19 @@
-import { useEffect } from 'react';
-
-const affiliationsList = [
-  {
-    mark: 'U',
-    tag: 'Academic',
-    name: '[University / Institution Name]',
-    role: 'Faculty & Researcher',
-    period: '20XX — Present'
-  },
-  {
-    mark: 'O',
-    tag: 'Fellowship',
-    name: '[Fellowship / Organization Name]',
-    role: 'Fellow',
-    period: '20XX'
-  },
-  {
-    mark: 'V',
-    tag: 'Enterprise',
-    name: '[Venture / Company Name]',
-    role: 'Founder',
-    period: '20XX — Present'
-  },
-  {
-    mark: 'P',
-    tag: 'Professional Body',
-    name: '[Professional Association Name]',
-    role: 'Member',
-    period: '20XX'
-  },
-  {
-    mark: 'E',
-    tag: 'Education',
-    name: '[Advisory / Board Role]',
-    role: 'Advisor',
-    period: '20XX — Present'
-  }
-];
+import { useEffect, useState } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function Affiliations() {
+  const [affiliationsList, setAffiliationsList] = useState(() => getStoredData('affiliations'));
+
   useEffect(() => {
-    // Reveal animation
+    const handleUpdate = () => setAffiliationsList(getStoredData('affiliations'));
+    window.addEventListener('db-update', handleUpdate);
+
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
       targets.forEach(t => t.classList.add('is-visible'));
-      return;
+      return () => window.removeEventListener('db-update', handleUpdate);
     }
+
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -56,7 +24,10 @@ export default function Affiliations() {
     }, { threshold: 0.18 });
     targets.forEach(t => obs.observe(t));
 
-    return () => obs.disconnect();
+    return () => {
+      window.removeEventListener('db-update', handleUpdate);
+      obs.disconnect();
+    };
   }, []);
 
   return (
