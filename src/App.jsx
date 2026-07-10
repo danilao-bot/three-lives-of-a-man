@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import PageLoader from './components/PageLoader';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -21,18 +22,26 @@ import SplashIntro from './components/SplashIntro';
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [splashActive, setSplashActive] = useState(false);
+  const [loaderKey, setLoaderKey] = useState(0);   // bumping this remounts PageLoader
+  const [showLoader, setShowLoader] = useState(true);
+
+  const navigateTo = useCallback((page, extraWork) => {
+    window.scrollTo(0, 0);
+    document.body.classList.remove('page-revealed');
+    setCurrentPage(page);
+    setShowLoader(true);
+    setLoaderKey(k => k + 1);   // remount loader
+    if (extraWork) extraWork();
+  }, []);
 
   useEffect(() => {
-    // Parse the hash on load
     const handleHashChange = () => {
       const hash = window.location.hash;
-      
-      // If we are navigating to an anchor section on the home page (e.g. #contact)
+
+      // Anchor-only links on home page (e.g. #contact) — no loader
       if (hash.startsWith('#') && !hash.startsWith('#/')) {
         setCurrentPage('home');
-        document.body.classList.add('page-revealed');
         setSplashActive(false);
-        // Let browser handle scroll or do it manually
         const targetId = hash.substring(1);
         setTimeout(() => {
           const el = document.getElementById(targetId);
@@ -41,38 +50,18 @@ export default function App() {
         return;
       }
 
-      if (hash.startsWith('#/fiction')) {
-        setCurrentPage('fiction');
-        document.body.classList.add('page-revealed');
-        window.scrollTo(0, 0);
-      } else if (hash.startsWith('#/opinion')) {
-        setCurrentPage('opinion');
-        document.body.classList.add('page-revealed');
-        window.scrollTo(0, 0);
-      } else if (hash.startsWith('#/research')) {
-        setCurrentPage('research');
-        document.body.classList.add('page-revealed');
-        window.scrollTo(0, 0);
-      } else if (hash.startsWith('#/affiliations')) {
-        setCurrentPage('affiliations');
-        document.body.classList.add('page-revealed');
-        window.scrollTo(0, 0);
-      } else if (hash.startsWith('#/book') || hash.startsWith('#/story')) {
-        setCurrentPage('book');
-        const hasVisitedBook = sessionStorage.getItem('book_splash_visited');
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
-        if (hasVisitedBook || reducedMotion) {
-          document.body.classList.add('page-revealed');
-          setSplashActive(false);
-        } else {
-          document.body.classList.remove('page-revealed'); // Hide page until splash is done
-          setSplashActive(true);
-        }
-        window.scrollTo(0, 0);
+      if (hash.startsWith('#/fiction'))       navigateTo('fiction');
+      else if (hash.startsWith('#/opinion'))   navigateTo('opinion');
+      else if (hash.startsWith('#/research'))  navigateTo('research');
+      else if (hash.startsWith('#/affiliations')) navigateTo('affiliations');
+      else if (hash.startsWith('#/book') || hash.startsWith('#/story')) {
+        navigateTo('book', () => {
+          const hasVisited = sessionStorage.getItem('book_splash_visited');
+          const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!hasVisited && !reduced) setSplashActive(true);
+        });
       } else {
-        setCurrentPage('home');
-        document.body.classList.add('page-revealed');
+        navigateTo('home');
         setSplashActive(false);
       }
     };
@@ -80,7 +69,7 @@ export default function App() {
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [navigateTo]);
 
   const handleSplashComplete = () => {
     setSplashActive(false);
@@ -117,7 +106,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-paper text-soft-ink antialiased overflow-x-hidden selection:bg-dawn-gold/30 selection:text-soft-ink">
-      {/* Splash Intro Preloader (only on Book subpage first load) */}
+      {/* Global page loader — shows on every route visit */}
+      {showLoader && (
+        <PageLoader
+          key={loaderKey}
+          onComplete={() => setShowLoader(false)}
+        />
+      )}
+
+      {/* Book splash (only on first visit to #/book) */}
       {currentPage === 'book' && splashActive && (
         <SplashIntro onComplete={handleSplashComplete} />
       )}

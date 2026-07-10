@@ -1185,3 +1185,78 @@ body.page-revealed .hero { opacity: 1; filter: blur(0); transform: scale(1); }
     gap: 14px !important;
   }
 }
+
+/* =========================================================
+   Global Page Loader
+   ========================================================= */
+.page-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  opacity: 1;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: all;
+}
+.page-loader-overlay--out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Brand name above spinner */
+.page-loader-brand {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+}
+
+/* The morphing spinner container */
+.page-loader-spinner {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+/* Both spans share base styles */
+.loader-span {
+  position: absolute;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 3px var(--wine);
+  animation: loaderMorph 2.5s infinite;
+}
+
+/* Second span is offset and uses gold */
+.loader-span--2 {
+  box-shadow: inset 0 0 0 3px var(--gold);
+  animation-delay: -1.25s;
+}
+
+@keyframes loaderMorph {
+  0%    { inset: 0 30px 30px 0; }
+  12.5% { inset: 0 30px 0 0;    }
+  25%   { inset: 30px 30px 0 0; }
+  37.5% { inset: 30px 0 0 0;    }
+  50%   { inset: 30px 0 0 30px; }
+  62.5% { inset: 0 0 0 30px;    }
+  75%   { inset: 0 0 30px 30px; }
+  87.5% { inset: 0 0 30px 0;    }
+  100%  { inset: 0 30px 30px 0; }
+}
+
+/* Subtle tagline below */
+.page-loader-tagline {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  opacity: 0.6;
+}
