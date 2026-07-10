@@ -54,7 +54,7 @@
   --ease: cubic-bezier(.22,.61,.36,1);
   --ease-soft: cubic-bezier(.16,.84,.44,1);
 
-  --maxw: 1180px;
+  --maxw: 1380px;
 }
 
 * { box-sizing: border-box; }
@@ -373,8 +373,8 @@ p { margin: 0; }
 
 .portrait-tilt-container {
   position: relative;
-  width: 320px;
-  height: 420px;
+  width: 340px;
+  height: 450px;
   perspective: 1000px;
   transition: transform 0.45s var(--ease);
 }
