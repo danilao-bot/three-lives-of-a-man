@@ -376,10 +376,11 @@ p { margin: 0; }
 
 .portrait-tilt-container {
   position: relative;
-  width: 85%;
+  height: clamp(300px, 52vh, 460px);
   aspect-ratio: 3.4/4.5;
   perspective: 1000px;
   transition: transform 0.45s var(--ease);
+  flex-shrink: 0;
 }
 
 /* Standard/Large laptop (1366px - 1280px) */
@@ -389,7 +390,7 @@ p { margin: 0; }
 
 /* Small laptop / large tablet (1100px) */
 @media (max-width: 1100px) {
-  .hero-grid { gap: 30px; padding-top: 70px; padding-bottom: 80px; }
+  .hero-grid { gap: 30px; padding-top: 60px; padding-bottom: 70px; }
   .hero-copy h1 { font-size: clamp(26px, 3vw, 40px); }
   .hero-cta { max-width: 380px; }
 }
@@ -443,6 +444,9 @@ p { margin: 0; }
     padding-bottom: 60px;
     gap: 36px;
   }
+  .portrait-tilt-container {
+    height: clamp(260px, 44vh, 380px);
+  }
   .hero-copy h1 {
     font-size: clamp(26px, 3vw, 40px);
     margin-top: 14px;
@@ -461,6 +465,9 @@ p { margin: 0; }
     padding-top: 36px;
     padding-bottom: 44px;
     gap: 24px;
+  }
+  .portrait-tilt-container {
+    height: clamp(220px, 38vh, 300px);
   }
   .hero-copy h1 {
     font-size: clamp(22px, 2.6vw, 34px);
