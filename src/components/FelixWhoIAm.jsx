@@ -56,14 +56,7 @@ export default function FelixWhoIAm() {
           </p>
         </div>
 
-        <div 
-          className="reveal"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '20px'
-          }}
-        >
+        <div className="whoi-grid reveal">
           {roles.map((role, idx) => {
             const IconComponent = role.icon;
             return (
