@@ -25,7 +25,11 @@ export default function AuthorsNote() {
     <section className="note section" id="note" style={{ paddingBottom: '180px' }}>
       <div className="container note-grid" style={{ position: 'relative', zIndex: 1 }}>
         <div className="note-portrait reveal">
-          <span>F</span>
+          <img
+            src="/author.jpeg"
+            alt="Dr. Felix – Author"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', borderRadius: 'inherit' }}
+          />
         </div>
         <div className="reveal">
           <span className="eyebrow">Author's Note</span>
