@@ -78,12 +78,15 @@ export default function FelixHero() {
       <div className="container hero-grid">
         <div className="hero-copy">
           <span className="eyebrow hero-fade-in" style={{ animationDelay: '0.1s' }}>
-            Researcher · Educator · Entrepreneur
+            {bio.heroEyebrow || "Researcher · Educator · Entrepreneur"}
           </span>
           <h1 className="hero-fade-in" style={{ animationDelay: '0.25s' }}>
-            Building Intelligent Systems.<br />
-            Advancing Knowledge.<br />
-            Inspiring Innovation.
+            {(bio.heroHeadline || "Building Intelligent Systems.\nAdvancing Knowledge.\nInspiring Innovation.").split('\n').map((line, idx, arr) => (
+              <span key={idx}>
+                {line}
+                {idx < arr.length - 1 && <br />}
+              </span>
+            ))}
           </h1>
           <p className="thesis hero-fade-in" style={{ animationDelay: '0.4s', maxWidth: '520px' }}>
             {bio.heroTagline}

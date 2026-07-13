@@ -6,13 +6,31 @@ const DB_PREFIX = 'felix_portfolio_';
 const DEFAULT_DATA = {
   // Biography & Hero details
   biography: {
+    heroEyebrow: "Researcher · Educator · Entrepreneur",
+    heroHeadline: "Building Intelligent Systems.\nAdvancing Knowledge.\nInspiring Innovation.",
     heroTagline: "Shaping the future of AI, education, and technology across Africa.",
     introQuote: "I believe technology should do more than automate processes—it should solve meaningful problems, inspire innovation, and improve lives.",
     introParagraphs: [
       "As an Artificial Intelligence researcher, university lecturer, author, and technology entrepreneur, my work bridges academic excellence with practical innovation. Through research, teaching, writing, and product development, I strive to make emerging technologies more accessible, trustworthy, and impactful for individuals, organizations, and society.",
       "Whether I'm publishing research, authoring books, mentoring future innovators, speaking at conferences, or building AI-driven solutions, my mission remains constant:"
     ],
-    introHighlights: "To create knowledge that empowers people and technology that transforms lives."
+    introHighlights: "To create knowledge that empowers people and technology that transforms lives.",
+    philosophyQuote: "Knowledge creates possibilities.\nInnovation creates impact.\nLeadership creates legacy.",
+    philosophyParagraph: "I believe the true value of knowledge lies not only in discovering new ideas but in sharing them, applying them, and empowering others to build upon them. Through research, writing, teaching, and innovation, I am committed to advancing technologies that serve humanity and contribute to Africa's digital future.",
+    contactEmail: "info@drfelix.com",
+    contactLocation: "Departments of Computer Science & Artificial Intelligence",
+    roles: [
+      "Artificial Intelligence Researcher",
+      "Author",
+      "University Lecturer",
+      "Technology Leader",
+      "AI Engineer",
+      "Entrepreneur",
+      "International Speaker",
+      "Software Developer",
+      "Digital Transformation Consultant",
+      "Research Supervisor"
+    ]
   },
 
   // Research Publications
@@ -227,7 +245,12 @@ export function getStoredData(key) {
   initDB();
   const val = localStorage.getItem(DB_PREFIX + key);
   try {
-    return val ? JSON.parse(val) : DEFAULT_DATA[key];
+    const parsed = val ? JSON.parse(val) : DEFAULT_DATA[key];
+    // If it's a plain object (not an array), merge default fields
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return { ...DEFAULT_DATA[key], ...parsed };
+    }
+    return parsed || DEFAULT_DATA[key];
   } catch (e) {
     return DEFAULT_DATA[key];
   }

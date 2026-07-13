@@ -1,11 +1,17 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function FelixPhilosophy() {
+  const [bio, setBio] = useState(() => getStoredData('biography'));
+
   useEffect(() => {
+    const handleUpdate = () => setBio(getStoredData('biography'));
+    window.addEventListener('db-update', handleUpdate);
+
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
       targets.forEach(t => t.classList.add('is-visible'));
-      return;
+      return () => window.removeEventListener('db-update', handleUpdate);
     }
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -17,8 +23,14 @@ export default function FelixPhilosophy() {
     }, { threshold: 0.15 });
     targets.forEach(t => obs.observe(t));
 
-    return () => obs.disconnect();
+    return () => {
+      window.removeEventListener('db-update', handleUpdate);
+      obs.disconnect();
+    };
   }, []);
+
+  const quote = bio?.philosophyQuote || "Knowledge creates possibilities.\nInnovation creates impact.\nLeadership creates legacy.";
+  const para = bio?.philosophyParagraph || "I believe the true value of knowledge lies not only in discovering new ideas but in sharing them, applying them, and empowering others to build upon them. Through research, writing, teaching, and innovation, I am committed to advancing technologies that serve humanity and contribute to Africa's digital future.";
 
   return (
     <section className="philosophy section on-ink" id="philosophy" style={{ background: 'linear-gradient(180deg, #081625 0%, #102A43 100%)', color: 'var(--on-ink)', padding: '140px 0 200px' }}>
@@ -49,9 +61,12 @@ export default function FelixPhilosophy() {
               fontWeight: '500'
             }}
           >
-            "Knowledge creates possibilities.<br />
-            Innovation creates impact.<br />
-            Leadership creates legacy."
+            {quote.split('\n').map((line, idx, arr) => (
+              <span key={idx}>
+                {line}
+                {idx < arr.length - 1 && <br />}
+              </span>
+            ))}
           </h2>
           
           <div 
@@ -65,7 +80,7 @@ export default function FelixPhilosophy() {
             }}
           >
             <p>
-              I believe the true value of knowledge lies not only in discovering new ideas but in sharing them, applying them, and empowering others to build upon them. Through research, writing, teaching, and innovation, I am committed to advancing technologies that serve humanity and contribute to Africa's digital future.
+              {para}
             </p>
           </div>
         </div>

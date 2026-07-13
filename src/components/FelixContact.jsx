@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Mail, MapPin, Send, Check } from 'lucide-react';
+import { getStoredData } from '../utils/db';
 
 export default function FelixContact() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [bio, setBio] = useState(() => getStoredData('biography'));
 
   useEffect(() => {
+    const handleUpdate = () => setBio(getStoredData('biography'));
+    window.addEventListener('db-update', handleUpdate);
+
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
       targets.forEach(t => t.classList.add('is-visible'));
-      return;
+      return () => window.removeEventListener('db-update', handleUpdate);
     }
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -22,7 +27,10 @@ export default function FelixContact() {
     }, { threshold: 0.15 });
     targets.forEach(t => obs.observe(t));
 
-    return () => obs.disconnect();
+    return () => {
+      window.removeEventListener('db-update', handleUpdate);
+      obs.disconnect();
+    };
   }, []);
 
   const handleSubmit = (e) => {
@@ -38,6 +46,9 @@ export default function FelixContact() {
       setTimeout(() => setIsSuccess(false), 5000);
     }, 1500);
   };
+
+  const email = bio?.contactEmail || "info@drfelix.com";
+  const location = bio?.contactLocation || "Departments of Computer Science & Artificial Intelligence";
 
   return (
     <section className="contact section" id="contact" style={{ background: 'var(--paper)', paddingBottom: '140px' }}>
@@ -71,8 +82,8 @@ export default function FelixContact() {
               </div>
               <div>
                 <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--ink)', fontFamily: 'var(--f-body)', margin: '0 0 4px 0' }}>Email Address</h4>
-                <a href="mailto:info@drfelix.com" style={{ fontSize: '14.5px', color: 'var(--text-soft)', transition: 'color 0.3s' }} className="contact-link">
-                  info@drfelix.com
+                <a href={`mailto:${email}`} style={{ fontSize: '14.5px', color: 'var(--text-soft)', transition: 'color 0.3s' }} className="contact-link">
+                  {email}
                 </a>
               </div>
             </div>
@@ -96,7 +107,7 @@ export default function FelixContact() {
               <div>
                 <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--ink)', fontFamily: 'var(--f-body)', margin: '0 0 4px 0' }}>Academic &amp; Research Affiliations</h4>
                 <p style={{ fontSize: '14.5px', color: 'var(--text-soft)', lineHeight: '1.5', margin: 0 }}>
-                  Departments of Computer Science &amp; Artificial Intelligence
+                  {location}
                 </p>
               </div>
             </div>
