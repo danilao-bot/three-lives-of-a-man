@@ -148,7 +148,7 @@ export default function FelixHero() {
               zIndex: 1
             }}>
               <img
-                src="/author.jpeg"
+                src={bio.profileImage || "/author.jpeg"}
                 alt="Dr. Felix Oshiorenoya Uloko"
                 style={{
                   width: '100%',

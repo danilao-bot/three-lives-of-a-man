@@ -8,7 +8,14 @@ const sequence = [
 
 export default function SplashIntro({ onComplete }) {
   const [stage, setStage] = useState(0); // 0, 1, 2
-  const [fadedOut, setFadedOut] = useState(false);
+  const [fadedOut, setFadedOut] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hasVisited = sessionStorage.getItem('book_splash_visited');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      return !!(hasVisited || reducedMotion);
+    }
+    return false;
+  });
   const [numStyle, setNumStyle] = useState({ opacity: 0, transform: 'translateY(12px)' });
   const [textStyle, setTextStyle] = useState({ opacity: 0, transform: 'translateY(18px) scale(0.95)' });
   const [dashOffset, setDashOffset] = useState(200);
@@ -26,7 +33,6 @@ export default function SplashIntro({ onComplete }) {
 
     if (hasVisited || reducedMotion) {
       onComplete();
-      setFadedOut(true);
       return;
     }
 
@@ -89,8 +95,10 @@ export default function SplashIntro({ onComplete }) {
     }, 300);
     timerRef.current.push(tStart);
 
+    const activeTimers = timerRef.current;
+
     return () => {
-      timerRef.current.forEach(clearTimeout);
+      activeTimers.forEach(clearTimeout);
       document.body.classList.remove('splash-active');
     };
   }, [onComplete]);

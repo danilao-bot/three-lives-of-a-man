@@ -1,9 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function Hero() {
   const heroRef = useRef(null);
   const coverRef = useRef(null);
   const [tiltStyle, setTiltStyle] = useState({});
+  const [bookHero, setBookHero] = useState(() => getStoredData('bookHero'));
+
+  useEffect(() => {
+    const handleUpdate = () => setBookHero(getStoredData('bookHero'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -68,15 +76,23 @@ export default function Hero() {
       <div className="container hero-grid">
         <div className="hero-copy">
           <span className="eyebrow hero-fade-in" style={{ animationDelay: '0.1s' }}>
-            A Debut Literary Work
+            {bookHero.eyebrow}
           </span>
           <h1 className="hero-fade-in" style={{ animationDelay: '0.25s' }}>
-            Birth<span className="hero-dot">·</span>Death<span className="hero-dot">·</span>
-            <br />
-            Rebirth
+            {(bookHero.headline || '').split('\n').map((line, idx, arr) => (
+              <span key={idx}>
+                {line.split('·').map((part, pIdx, pArr) => (
+                  <span key={pIdx}>
+                    {part}
+                    {pIdx < pArr.length - 1 && <span className="hero-dot">·</span>}
+                  </span>
+                ))}
+                {idx < arr.length - 1 && <br />}
+              </span>
+            ))}
           </h1>
           <p className="thesis hero-fade-in" style={{ animationDelay: '0.4s' }}>
-            We do not live one life. We live three — and the third is the one we have to build with our own hands.
+            {bookHero.tagline}
           </p>
           <div className="hero-cta hero-fade-in" style={{ animationDelay: '0.55s' }}>
             <a
@@ -105,15 +121,14 @@ export default function Hero() {
             <div className="book-cover__inner">
               <span className="book-cover__rule"></span>
               <h2>
-                THREE
-                <br />
-                LIVES
-                <br />
-                OF A
-                <br />
-                MAN
+                {(bookHero.coverTitle || '').split('\n').map((line, idx, arr) => (
+                  <span key={idx}>
+                    {line}
+                    {idx < arr.length - 1 && <br />}
+                  </span>
+                ))}
               </h2>
-              <span className="book-cover__sub">A Novel · Dr. Felix</span>
+              <span className="book-cover__sub">{bookHero.coverSubtitle}</span>
               <span className="book-cover__rule"></span>
             </div>
           </div>

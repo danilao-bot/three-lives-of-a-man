@@ -1,6 +1,15 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function AuthorsNote() {
+  const [note, setNote] = useState(() => getStoredData('authorsNote'));
+
+  useEffect(() => {
+    const handleUpdate = () => setNote(getStoredData('authorsNote'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
+
   useEffect(() => {
     // Reveal animation
     const targets = document.querySelectorAll('.reveal');
@@ -26,7 +35,7 @@ export default function AuthorsNote() {
       <div className="container note-grid" style={{ position: 'relative', zIndex: 1 }}>
         <div className="note-portrait reveal">
           <img
-            src="/author.jpeg"
+            src={note.image || "/author.jpeg"}
             alt="Dr. Felix – Author"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', borderRadius: 'inherit' }}
           />
@@ -34,17 +43,17 @@ export default function AuthorsNote() {
         <div className="reveal">
           <span className="eyebrow">Author's Note</span>
           <p className="note-quote" style={{ marginTop: '22px' }}>
-            This book began the way most honest things do — quietly, and without permission.
+            {note.quote}
           </p>
           <div className="note-body">
             <p>
-              I didn't set out to write a novel about fathers and brothers and the lives we lose along the way. I set out to make sense of something I couldn't say out loud. The writing did the rest.
+              {note.p1}
             </p>
             <p>
-              If you've ever had to rebuild a version of yourself you didn't ask for, this book was written for you. Not to give you answers — I don't have many — but to keep you company while you find your own.
+              {note.p2}
             </p>
           </div>
-          <p className="note-sign">— Dr. Felix</p>
+          <p className="note-sign">{note.sign}</p>
         </div>
       </div>
 

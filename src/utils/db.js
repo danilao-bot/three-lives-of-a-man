@@ -227,7 +227,79 @@ const DEFAULT_DATA = {
     countdownTarget: "2026-08-01T00:00:00",
     digitalPrice: "₦5,000",
     purchaseLink: "#"
-  }
+  },
+
+  // Expertise Cards
+  expertiseList: [
+    {
+      iconName: 'BrainCircuit',
+      title: 'Artificial Intelligence',
+      description: 'Designing intelligent systems using Machine Learning, Deep Learning, Computer Vision, Explainable AI, and Large Language Models.',
+      link: '#/research',
+      linkText: 'Explore Research'
+    },
+    {
+      iconName: 'SearchCode',
+      title: 'Research',
+      description: 'Publishing impactful research that advances AI, data science, and intelligent systems while addressing real-world challenges.',
+      link: '#/research',
+      linkText: 'View Publications'
+    },
+    {
+      iconName: 'Library',
+      title: 'Books & Publications',
+      description: 'Authoring books, academic publications, and educational resources that simplify complex technological concepts and inspire continuous learning.',
+      link: '#/book',
+      linkText: 'Read My Books'
+    },
+    {
+      iconName: 'Presentation',
+      title: 'Teaching & Mentorship',
+      description: 'Equipping students, researchers, and professionals with practical knowledge in Artificial Intelligence, Data Science, Software Engineering, and Digital Innovation.',
+      link: '#/affiliations',
+      linkText: 'View Academic Work'
+    },
+    {
+      iconName: 'Lightbulb',
+      title: 'Innovation & Entrepreneurship',
+      description: 'Building technology ventures and AI-powered solutions that create measurable value across education, business, and governance.',
+      link: '#/affiliations',
+      linkText: 'Explore Ventures'
+    },
+    {
+      iconName: 'BookOpen',
+      title: 'Speaking & Advisory',
+      description: 'Delivering keynote presentations, workshops, executive training, and strategic advisory services on Artificial Intelligence, innovation, leadership, and digital transformation.',
+      link: '#/opinion',
+      linkText: 'Read Opinions'
+    }
+  ],
+
+  // Author's Note content
+  authorsNote: {
+    quote: "This book began the way most honest things do — quietly, and without permission.",
+    p1: "I didn't set out to write a novel about fathers and brothers and the lives we lose along the way. I set out to make sense of something I couldn't say out loud. The writing did the rest.",
+    p2: "If you've ever had to rebuild a version of yourself you didn't ask for, this book was written for you. Not to give you answers — I don't have many — but to keep you company while you find your own.",
+    sign: "— Dr. Felix",
+    image: "" // fallback to /author.jpeg
+  },
+
+  // Book Page Hero Details
+  bookHero: {
+    eyebrow: "A Debut Literary Work",
+    headline: "Birth·Death·\nRebirth",
+    tagline: "We do not live one life. We live three — and the third is the one we have to build with our own hands.",
+    coverTitle: "THREE\nLIVES\nOF A\nMAN",
+    coverSubtitle: "A Novel · Dr. Felix"
+  },
+
+  // Book details table list
+  bookDetailsList: [
+    { label: "Genre", value: "Literary Fiction" },
+    { label: "Release Date", value: "July 1, 2026" },
+    { label: "Format", value: "Digital (PDF/EPUB)" },
+    { label: "Price", value: "₦5,000" }
+  ]
 };
 
 // Initialize DB elements if they do not exist
@@ -251,7 +323,7 @@ export function getStoredData(key) {
       return { ...DEFAULT_DATA[key], ...parsed };
     }
     return parsed || DEFAULT_DATA[key];
-  } catch (e) {
+  } catch {
     return DEFAULT_DATA[key];
   }
 }

@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 import { 
   BrainCircuit, 
   SearchCode, 
@@ -6,55 +7,32 @@ import {
   BookOpen,
   Presentation, 
   Lightbulb, 
-  ArrowUpRight 
+  ArrowUpRight,
+  HelpCircle
 } from 'lucide-react';
 
-const expertiseList = [
-  {
-    icon: BrainCircuit,
-    title: 'Artificial Intelligence',
-    description: 'Designing intelligent systems using Machine Learning, Deep Learning, Computer Vision, Explainable AI, and Large Language Models.',
-    link: '#/research',
-    linkText: 'Explore Research'
-  },
-  {
-    icon: SearchCode,
-    title: 'Research',
-    description: 'Publishing impactful research that advances AI, data science, and intelligent systems while addressing real-world challenges.',
-    link: '#/research',
-    linkText: 'View Publications'
-  },
-  {
-    icon: Library,
-    title: 'Books & Publications',
-    description: 'Authoring books, academic publications, and educational resources that simplify complex technological concepts and inspire continuous learning.',
-    link: '#/book',
-    linkText: 'Read My Books'
-  },
-  {
-    icon: Presentation,
-    title: 'Teaching & Mentorship',
-    description: 'Equipping students, researchers, and professionals with practical knowledge in Artificial Intelligence, Data Science, Software Engineering, and Digital Innovation.',
-    link: '#/affiliations',
-    linkText: 'View Academic Work'
-  },
-  {
-    icon: Lightbulb,
-    title: 'Innovation & Entrepreneurship',
-    description: 'Building technology ventures and AI-powered solutions that create measurable value across education, business, and governance.',
-    link: '#/affiliations',
-    linkText: 'Explore Ventures'
-  },
-  {
-    icon: BookOpen,
-    title: 'Speaking & Advisory',
-    description: 'Delivering keynote presentations, workshops, executive training, and strategic advisory services on Artificial Intelligence, innovation, leadership, and digital transformation.',
-    link: '#/opinion',
-    linkText: 'Read Opinions'
-  }
-];
+const ICON_MAP = {
+  BrainCircuit,
+  SearchCode,
+  Library,
+  BookOpen,
+  Presentation,
+  Lightbulb
+};
+
+function getIconComponent(name) {
+  return ICON_MAP[name] || HelpCircle;
+}
 
 export default function FelixExpertise() {
+  const [expertiseList, setExpertiseList] = useState(() => getStoredData('expertiseList'));
+
+  useEffect(() => {
+    const handleUpdate = () => setExpertiseList(getStoredData('expertiseList'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
+
   useEffect(() => {
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
@@ -87,7 +65,7 @@ export default function FelixExpertise() {
 
         <div className="grid grid-3 reveal">
           {expertiseList.map((item, idx) => {
-            const IconComponent = item.icon;
+            const IconComponent = getIconComponent(item.iconName);
             return (
               <div 
                 key={idx} 

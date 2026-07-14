@@ -1,6 +1,15 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getStoredData } from '../utils/db';
 
 export default function BookDetails() {
+  const [details, setDetails] = useState(() => getStoredData('bookDetailsList'));
+
+  useEffect(() => {
+    const handleUpdate = () => setDetails(getStoredData('bookDetailsList'));
+    window.addEventListener('db-update', handleUpdate);
+    return () => window.removeEventListener('db-update', handleUpdate);
+  }, []);
+
   useEffect(() => {
     const targets = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
@@ -24,22 +33,12 @@ export default function BookDetails() {
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <span className="eyebrow reveal">Book Details</span>
         <div className="details-card reveal" style={{ marginTop: '36px' }}>
-          <div className="detail">
-            <div className="l">Genre</div>
-            <div className="v">Literary Fiction</div>
-          </div>
-          <div className="detail">
-            <div className="l">Release Date</div>
-            <div className="v">July 1, 2026</div>
-          </div>
-          <div className="detail">
-            <div className="l">Format</div>
-            <div className="v">Digital (PDF/EPUB)</div>
-          </div>
-          <div className="detail">
-            <div className="l">Price</div>
-            <div className="v">₦5,000</div>
-          </div>
+          {details.map((item, idx) => (
+            <div className="detail" key={idx}>
+              <div className="l">{item.label}</div>
+              <div className="v">{item.value}</div>
+            </div>
+          ))}
         </div>
       </div>
 
